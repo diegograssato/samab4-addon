@@ -1,0 +1,23 @@
+---
+configuration:
+  username:
+    name: Usuário
+    description: >-
+      O nome de usuário que você gostaria de usar para autenticar com o servidor Samba.
+  password:
+    name: Senha
+    description: >-
+      A senha que acompanha o nome de usuário configurado para autenticação.
+  workgroup:
+    name: Workgroup
+    description: Altere WORKGROUP para refletir suas necessidades de rede.
+  compatibility_mode:
+    name: Ativar modo de compatibilidade
+    description: >-
+      Habilite isso para usar protocolos Samba legados antigos no addon Samba.
+  veto_files:
+    name: Veto Files
+    description: Lista de arquivos que não estão visíveis nem acessíveis.
+  allow_hosts:
+    name: Endereços permitidos
+    description: Lista de hosts/redes com permissão para acessar as pastas compartilhadas.

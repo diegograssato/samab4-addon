@@ -2,7 +2,6 @@
 # ==============================================================================
 # Start smbd service
 # ==============================================================================
-exec smbd \
-  --foreground \
-  --debug-stdout \
-  --no-process-group
+#samba-tool domain schemaupgrade
+bashio::log.info "Starting Samba4 Active Directory..."
+exec /usr/sbin/samba -i

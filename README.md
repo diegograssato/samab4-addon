@@ -1,4 +1,4 @@
-# Home Assistant Add-on: Samba4 share
+# Home Assistant Add-on: Samba4 4 share
 
 Share your configuration over the network using Windows file sharing.
 
@@ -14,3 +14,17 @@ It lets you access your config files with Windows and macOS devices.
 [armhf-shield]: https://img.shields.io/badge/armhf-yes-green.svg
 [armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
 [i386-shield]: https://img.shields.io/badge/i386-yes-green.svg
+
+docker run \
+  --rm \
+  -it \
+  --name builder \
+  --privileged \
+  -v ${PWD}:/data \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  homeassistant/amd64-builder \
+  -t /data \
+  --all \
+  --test \
+  -i my-test-addon-amd64 \
+  -d local

@@ -12,7 +12,9 @@ function start_docker() {
     echo "Starting docker..."
     dockerd 2> /dev/null &
     DOCKER_PID=$!
-
+    sleep 5
+    sudo chown 777 /var/run/docker.sock
+    sudo usermod -aG docker vscode
     echo "Waiting for docker to initialize..."
     starttime="$(date +%s)"
     endtime="$(date +%s)"
@@ -20,6 +22,7 @@ function start_docker() {
         if [ $((endtime - starttime)) -le $DOCKER_TIMEOUT ]; then
             sleep 1
             endtime=$(date +%s)
+
         else
             echo "Timeout while waiting for docker to come up"
             exit 1
@@ -32,7 +35,7 @@ function start_docker() {
 function stop_docker() {
     local starttime
     local endtime
-
+    DOCKER_PID=$(pidof dockerd)
     echo "Stopping in container docker..."
     if [ "$DOCKER_PID" -gt 0 ] && kill -0 "$DOCKER_PID" 2> /dev/null; then
         starttime="$(date +%s)"
@@ -61,8 +64,8 @@ function install() {
 }
 
 function cleanup_hass_data() {
-    rm -rf /workspaces/test_hassio/{apparmor,backup,config.json,dns,dns.json,homeassistant,homeassistant.json,ingress.json,share,ssl,tmp,updater.json}
-    rm -rf /workspaces/test_hassio/addons/{core,data,git}
+    rm -rf /workspaces/samab4-addon/{audio,media,audio.json,cli.json,apparmor,backup,config.json,dns,dns.json,homeassistant,homeassistant.json,ingress.json,share,ssl,tmp,updater.json,multicast.json,observer.json}
+    rm -rf /workspaces/samab4-addon/addons/{core,data,git}
 }
 
 function cleanup_docker() {
@@ -77,9 +80,9 @@ function run_supervisor() {
         --security-opt apparmor:unconfined \
         -v /run/docker.sock:/run/docker.sock \
         -v /run/dbus:/run/dbus \
-        -v "/workspaces/test_hassio":/data \
+        -v $(pwd):/data \
         -v /etc/machine-id:/etc/machine-id:ro \
-        -e SUPERVISOR_SHARE="/workspaces/test_hassio" \
+        -e SUPERVISOR_SHARE=$(pwd) \
         -e SUPERVISOR_NAME=hassio_supervisor \
         -e SUPERVISOR_DEV=1 \
         -e HOMEASSISTANT_REPOSITORY="homeassistant/qemux86-64-homeassistant" \
@@ -89,6 +92,7 @@ function run_supervisor() {
 case "$1" in
     "--cleanup")
         echo "Cleaning up old environment"
+        stop_docker
         cleanup_docker || true
         cleanup_hass_data || true
         exit 0;;
@@ -99,6 +103,6 @@ case "$1" in
         install
         cleanup_docker || true
         run_supervisor
-        stop_docker;; 
+        stop_docker;;
 esac
 

@@ -1,4 +1,10 @@
 {
+  "editor.renderWhitespace": "all",
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.cursorStyle": "block",
   "files.associations": {
     "*.yaml": "home-assistant"
   }
